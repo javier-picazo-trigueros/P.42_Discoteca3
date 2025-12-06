@@ -17,12 +17,39 @@ DISCO **Seleccion(DISCO *Ficha, int Campo)
     DISCO **Orden;
     struct timeval inicio, fin;
     
-    //Añade aquí la definición del resto de variables necesarias
+    int i, j, minimo;
+    DISCO *temp;
+    int comparacion;
 
     gettimeofday(&inicio,NULL);
     Orden=InitOrden(Ficha);
 
-    //Código del Alumno del Algoritmo de ordenación por Selección
+    // Algoritmo de Selección
+    for (i = 0; i < Estadisticas.NumeroFichas - 1; i++) {
+        minimo = i;
+        
+        for (j = i + 1; j < Estadisticas.NumeroFichas; j++) {
+            if (Campo == ORDEN_POR_TITULO) {
+                comparacion = strcmp(Orden[j]->Obra, Orden[minimo]->Obra);
+            } 
+            else if (Campo == ORDEN_POR_AUTOR) {
+                comparacion = strcmp(Orden[j]->ApellAutor, Orden[minimo]->ApellAutor);
+                if (comparacion == 0) {
+                    comparacion = strcmp(Orden[j]->NomAutor, Orden[minimo]->NomAutor);
+                }
+            }
+            
+            if (comparacion < 0) {
+                minimo = j;
+            }
+        }
+        
+        if (minimo != i) {
+            temp = Orden[i];
+            Orden[i] = Orden[minimo];
+            Orden[minimo] = temp;
+        }
+    }
 
     gettimeofday(&fin,NULL);
     Estadisticas.TiempoSeleccion=DifTiempo(inicio,fin);

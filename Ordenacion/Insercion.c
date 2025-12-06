@@ -17,12 +17,40 @@ DISCO **Insercion(DISCO *Ficha,int Campo)
     DISCO **Orden;
     struct timeval inicio, fin;
     
-    //Añade aquí la definición del resto de variables necesarias
+    int i, j;
+    DISCO *elementoActual;
+    int comparacion;
 
     gettimeofday(&inicio,NULL);
     Orden=InitOrden(Ficha);
 
-    //Código del Alumno del Algoritmo de ordenación por Inserción
+    // Algoritmo de Inserción
+    for (i = 1; i < Estadisticas.NumeroFichas; i++) {
+        elementoActual = Orden[i];
+        j = i - 1;
+        
+        while (j >= 0) {
+            if (Campo == ORDEN_POR_TITULO) {
+                comparacion = strcmp(Orden[j]->Obra, elementoActual->Obra);
+            } 
+            else if (Campo == ORDEN_POR_AUTOR) {
+                comparacion = strcmp(Orden[j]->ApellAutor, elementoActual->ApellAutor);
+                if (comparacion == 0) {
+                    comparacion = strcmp(Orden[j]->NomAutor, elementoActual->NomAutor);
+                }
+            }
+            
+            if (comparacion > 0) {
+                Orden[j + 1] = Orden[j];
+                j--;
+            } 
+            else {
+                break;
+            }
+        }
+        
+        Orden[j + 1] = elementoActual;
+    }
     
     gettimeofday(&fin,NULL);
     Estadisticas.TiempoInsercion=DifTiempo(inicio,fin);
